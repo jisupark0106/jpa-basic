@@ -1,9 +1,9 @@
 package jpa.basic;
 
 import jakarta.persistence.*;
-import jpa.basic.shop.domain.Address;
-import jpa.basic.shop.domain.Member;
-import jpa.basic.shop.domain.Movie;
+import jpa.basic.shop.domain.*;
+
+import java.util.List;
 
 public class JPAMain {
     public static void main(String[] args) {
@@ -15,18 +15,40 @@ public class JPAMain {
 
         try {
 
-            Movie movie = new Movie();
-            movie.setName("킬링로맨스");
-            movie.setPrice(20000);
-            movie.setDirector("박지수");
-            movie.setActor("이하늬");
+            Member m1 = new Member();
+            m1.setName("박지수");
+            em.persist(m1);
 
-            em.persist(movie);
+            Member m2 = new Member();
+            m2.setName("애니");
+            em.persist(m2);
 
-            Member member = new Member();
-            member.setName("박지수");
-            member.setAddress(new Address("서울시","노원구","아파트"));
-            em.persist(member);
+            Book b = new Book();
+            b.setAuthor("b.author");
+            b.setName("b.name");
+            b.setPrice(1000);
+            em.persist(b);
+
+            Movie m = new Movie();
+            m.setDirector("m.author");
+            m.setName("m.name");
+            m.setPrice(5000);
+            em.persist(m);
+
+            Order o1 = new Order();
+            o1.setMember(m1);
+            o1.addOrderItem(b);
+            o1.addOrderItem(m);
+            em.persist(o1);
+
+            em.flush();
+            em.clear();
+
+            String q = "select o from Order o join o.member";
+            List<Order> resultList = em.createQuery(q, Order.class).getResultList();
+            for (Order order : resultList) {
+                System.out.println(order.getMember().getName());
+            }
 
             // code
             transaction.commit();

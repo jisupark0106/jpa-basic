@@ -36,6 +36,12 @@ public class Order extends BaseEntity{
         this.orderItemList = orderItemList;
     }
 
+    public void addOrderItem(Item item){
+        OrderItem oi = new OrderItem();
+        oi.setItem(item);
+        this.orderItemList.add(oi);
+    }
+
     public Delivery getDelivery() {
         return delivery;
     }
